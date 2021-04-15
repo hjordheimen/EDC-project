@@ -1,0 +1,6 @@
+function class = classifier(x, W)
+    %Returns class of 
+    x = [x' 1]';    % Homogenous form
+    
+end
+

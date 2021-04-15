@@ -97,6 +97,12 @@ for k = 1:5
 		end
 	end
 
-	disp([confd conft])
+% 	disp([confd conft])
+    disp(confd)
+    disp("----------------------")
+    disp(conft)
+    disp("----------------------")
+    disp("----------------------")
+    disp("----------------------")
 
 end

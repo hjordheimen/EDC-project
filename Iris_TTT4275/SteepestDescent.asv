@@ -1,0 +1,31 @@
+function [x,f_opt] = SteepestDescent(f,gradf,x0,tol,N)
+% f         function handle for object function
+% gradf     function handle for gradient of object function
+    
+    if nargin < 5
+        N = 100;
+    end
+    if nargin < 4
+        tol = 1e-6;
+    end
+
+    iterate = true;
+    x = NaN(length(x0),N+1);
+    x(:,1) = x0;
+    
+    xk = x0;
+    i = 1;
+    
+    while iterate
+        pk = -gradf(xk);
+        ak = BLS(f,f(xk),xk,gradf(xk),pk);
+        xk = xk + ak*pk;
+        
+        iterate = (abs(f(xk)-f(x(:,i))) > tol) & (i < N);
+        i = i + 1;
+        x(:,i) = xk;
+    end
+    x = x(:,1:i);
+    f_opt = f(x(:,end));
+end
+
