@@ -1,31 +1,41 @@
 function [x,f_opt] = SteepestDescent(f,gradf,x0,tol,N)
 % f         function handle for object function
 % gradf     function handle for gradient of object function
-    
+
+    row = size(x0, 1);
+    col = size(x0, 2);
+
     if nargin < 5
         N = 100;
     end
     if nargin < 4
-        tol = 1e-6;
+        tol = 1e-8;
     end
-
+    
     iterate = true;
-    x = NaN(length(x0),N+1);
-    x(:,1) = x0;
+    x = NaN(row,(N+1)*col);
+    x(:,1:col) = x0;
     
     xk = x0;
     i = 1;
     
     while iterate
         pk = -gradf(xk);
-        ak = BLS(f,f(xk),xk,gradf(xk),pk);
-        xk = xk + ak*pk;
+        ak = 0.00585; %BLS(f,f(xk),xk,gradf(xk),pk);
+        xk_p1 = xk + ak*pk;
         
-        iterate = (abs(f(xk)-f(x(:,i))) > tol) & (i < N);
+%         disp(f(xk_p1)-f(xk));
+        
+%         iterate = (abs(f(xk_p1)-f(xk)) > tol) & (i < N);
+        iterate = (norm(xk_p1 - xk, inf) > tol) & (i < N);
+        iterate = (norm(grad(x_k), inf) > e & norm(X(:, k) - X(:, k-1), inf) > e & norm(F(:, k) - F(:, k-1), inf) > e & k < N);
+        
+        x(:,i*col + 1:i*col + col) = xk_p1;
+        xk = xk_p1;
         i = i + 1;
-        x(:,i) = xk;
     end
-    x = x(:,1:i);
-    f_opt = f(x(:,end));
+    
+    x = x(:,1:i*col);
+    f_opt = f(x(:,end-col + 1:end));
 end
 

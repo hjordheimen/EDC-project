@@ -102,9 +102,20 @@ for i = 1:N_training
     confusion_matrix_training(2, x2_class) = confusion_matrix_training(2, x2_class) + 1;
     confusion_matrix_training(3, x3_class) = confusion_matrix_training(3, x3_class) + 1;
 end
-
-disp(confusion_)
+disp('Testing')
+disp(confusion_matrix_testing)
+disp('Training')
 disp(confusion_matrix_training)
+
+testing_error_count = 0;
+training_error_count = 0;
+
+
+for i = 1:C
+    testing_error_count = testing_error_count +  N_test - confusion_matrix_testing(i, i);
+    training_error_count = training_error_count + N_training - con
+end
+
 
 
 
