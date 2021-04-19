@@ -3,9 +3,9 @@ clear
 
 %% Initializing and setup
 
-x1all = load('class_1','-ascii');
-x2all = load('class_2','-ascii');
-x3all = load('class_3','-ascii');
+x1all = load('class_1','-ascii'); % Iris Setosa
+x2all = load('class_2','-ascii'); % Iris Versicolor
+x3all = load('class_3','-ascii'); % Iris Virginica
 
 
 
@@ -16,31 +16,33 @@ C = 3;
 
 
 
-%% Histogram for each feature and class
+%% Histogram for each feature as a whole
 
-% Don't know how many bins we should us.. Using 25 for now.
-% Sepal length histogram
+% Don't know how many bins we should us.. Using 'BinWidth', 0.1 for now.
+
 figure(1);
-h_sepal_length = histogram([x1all(:, 1); x2all(:, 1); x3all(:, 1)], 25);
+sgtitle("All iris'")
+% Sepal length histogram
+subplot(221);
+h_sepal_length = histogram([x1all(:, 1); x2all(:, 1); x3all(:, 1)], 'BinWidth', 0.1);
 disp(h_sepal_length)
 title('Sepal length histogram');
 
 % Sepal width histogram
-figure(2);
-h_sepal_width = histogram([x1all(:, 2); x2all(:, 2); x3all(:, 2)], 25);
-xscale
+subplot(222);
+h_sepal_width = histogram([x1all(:, 2); x2all(:, 2); x3all(:, 2)], 'BinWidth', 0.1);
 disp(h_sepal_width)
 title('Sepal width histogram');
 
 % Petal length histogram
-figure(3);
-h_petal_length = histogram([x1all(:, 3); x2all(:, 3); x3all(:, 3)], 25);
+subplot(223);
+h_petal_length = histogram([x1all(:, 3); x2all(:, 3); x3all(:, 3)], 'BinWidth', 0.1);
 disp(h_petal_length)
 title('Petal length histogram')
 
 % Petal width histogram
-figure(4);
-h_petal_width = histogram([x1all(:, 4); x2all(:, 4); x3all(:, 4)], 25);
+subplot(224);
+h_petal_width = histogram([x1all(:, 4); x2all(:, 4); x3all(:, 4)], 'BinWidth', 0.1);
 disp(h_petal_width)
 title('Petal width histogram');
 
@@ -51,12 +53,96 @@ title('Petal width histogram');
 % Usikker på hvordan vi skal lage histogram for hver klasse. Er det slik at
 % vi skal lage Histogram for hver av sepal og petal for hver klasse?
 
-% Iris Setosa histogram
+% Etter å ha tenkt litt, så tror jeg de mener at vi skal gjøre det over for
+% hver enkelt klasse itillegg. Da gir hvertfall 2.c) veldig mening mtp
+% "Comment on the property of the linear separability both as a whole and 
+% for the three separate classes."
 
-% Iris Versicolor histogram
+% Vi kan eventuelt plotte alle klasse histogrammene sammen, for å se
+% hvordan de fordeler seg (med farger :D).
 
-% Iris Virginica histogram
+%% Iris Setosa histogram
+figure(2);
+sgtitle('Iris Setosa')
+% Sepal length histogram
+subplot(221);
+h_sepal_length = histogram(x1all(:, 1), 'BinWidth', 0.1);
+disp(h_sepal_length)
+title('Sepal length');
 
+% Sepal width histogram
+subplot(222);
+h_sepal_width = histogram(x1all(:, 2), 'BinWidth', 0.1);
+disp(h_sepal_width)
+title('Sepal width');
+
+% Petal length histogram
+subplot(223);
+h_petal_length = histogram(x1all(:, 3), 'BinWidth', 0.1);
+disp(h_petal_length)
+title('Petal length')
+
+% Petal width histogram
+subplot(224)
+h_petal_width = histogram(x1all(:, 4), 'BinWidth', 0.1);
+disp(h_petal_width)
+title('Petal width');
+
+
+%% Iris Versicolor histogram
+
+figure(3);
+sgtitle('Iris Versicolor')
+% Sepal length histogram
+subplot(221);
+h_sepal_length = histogram(x2all(:, 1), 'BinWidth', 0.1);
+disp(h_sepal_length)
+title('Sepal length');
+
+% Sepal width histogram
+subplot(222);
+h_sepal_width = histogram(x2all(:, 2), 'BinWidth', 0.1);
+disp(h_sepal_width)
+title('Sepal width');
+
+% Petal length histogram
+subplot(223);
+h_petal_length = histogram(x2all(:, 3), 'BinWidth', 0.1);
+disp(h_petal_length)
+title('Petal length')
+
+% Petal width histogram
+subplot(224)
+h_petal_width = histogram(x2all(:, 4), 'BinWidth', 0.1);
+disp(h_petal_width)
+title('Petal width');
+
+%% Iris Virginica histogram
+figure(4);
+sgtitle('Iris Virginica')
+% Sepal length histogram
+subplot(221);
+h_sepal_length = histogram(x3all(:, 1), 'BinWidth', 0.1);
+disp(h_sepal_length)
+title('Sepal length');
+
+% Sepal width histogram
+subplot(222);
+h_sepal_width = histogram(x3all(:, 2), 'BinWidth', 0.1);
+disp(h_sepal_width)
+title('Sepal width');
+
+% Petal length histogram
+subplot(223);
+h_petal_length = histogram(x3all(:, 3), 'BinWidth', 0.1);
+disp(h_petal_length)
+title('Petal length')
+
+% Petal width histogram
+subplot(224)
+h_petal_width = histogram(x3all(:, 4), 'BinWidth', 0.1);
+disp(h_petal_width)
+title('Petal width');
 
 
 
