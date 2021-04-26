@@ -107,20 +107,15 @@ disp(confusion_matrix_testing)
 disp('Training')
 disp(confusion_matrix_training)
 
-testing_error_count = 0;
-training_error_count = 0;
+testing_error_rate = 1 - (trace(confusion_matrix_testing)/(N_test*C));
+training_error_rate = 1 - (trace(confusion_matrix_training)/(N_training*C));
 
 
-for i = 1:C
-    testing_error_count = testing_error_count +  N_test - confusion_matrix_testing(i, i);
-    training_error_count = training_error_count + N_training - confusion_matrix_training(i, i);
-end
+disp('Error rate - testing')
+disp(testing_error_rate)
 
-disp('Number of errors - testing')
-disp(testing_error_count)
-
-disp('Number of errors - training')
-disp(training_error_count)
+disp('Error rate - training')
+disp(training_error_rate)
 
 disp('------------------')
 disp('--Reversed Order--')
@@ -236,20 +231,17 @@ disp(confusion_matrix_testing)
 disp('Training')
 disp(confusion_matrix_training)
 
-testing_error_count = 0;
-training_error_count = 0;
 
 
-for i = 1:C
-    testing_error_count = testing_error_count +  N_test - confusion_matrix_testing(i, i);
-    training_error_count = training_error_count + N_training - confusion_matrix_training(i, i);
-end
+testing_error_rate = 1 - (trace(confusion_matrix_testing)/(N_test*C));
+training_error_rate = 1 - (trace(confusion_matrix_training)/(N_training*C));
 
-disp('Number of errors - testing')
-disp(testing_error_count)
 
-disp('Number of errors - training')
-disp(training_error_count)
+disp('Error rate - testing')
+disp(testing_error_rate)
+
+disp('Error rate - training')
+disp(training_error_rate)
 
 
 
