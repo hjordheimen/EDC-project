@@ -13,12 +13,12 @@ chunk_size = 1000;
 N = num_test/chunk_size;
 
 confusion_matrix = zeros(C, C);
-NN = NaN(1, 7);
+NN = NaN(1, K);
 
 
 for k = 1:N
     Z = dist(trainv, testv((k - 1)*chunk_size + 1:k*chunk_size, :)');
-    [M, I] = mink(Z, 7);
+    [M, I] = mink(Z, K);
     for i = 1:chunk_size
         for j = 1:K
            NN(j) = trainlab(I(j, i)); 
@@ -31,7 +31,7 @@ for k = 1:N
 end
 
 
-error_rate = trace(confusion_matrix)/num_test;
+error_rate = 1 - (trace(confusion_matrix)/num_test);
 
 
 disp("Confusion matrix:")
