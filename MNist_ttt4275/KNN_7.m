@@ -3,20 +3,20 @@ clear
 
 %% KNN classifier with K = 7
 
+% Loading data
 load('data_all.mat');
+
+% Initializinf parameters and matrices
 C = 10;
 K = 7;
-
-
 chunk_size = 1000;
 N = num_test/chunk_size;
 
-% classified_number = zeros(1, num_test);
-
 confusion_matrix = zeros(C, C);
 NN = NaN(1, 7);
+
+
 for k = 1:N
-    
     Z = dist(trainv, testv((k - 1)*chunk_size + 1:k*chunk_size, :)');
     [M, I] = mink(Z, 7);
     for i = 1:chunk_size
