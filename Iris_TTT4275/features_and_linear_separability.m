@@ -69,9 +69,6 @@ end
 
 
 %% Take away the feature with most overlap between classes - *Vil si at det er Sepal length eller Sepal width, går for Sepal length i første omgang ;) *
-% TODO: Bør lage en funksjon som tar inn hvilken features vi vil ha, for så
-% å returnere classifieren.
-
 
 % Setting up
 N = size(x1all, 1);
@@ -94,6 +91,8 @@ x_training = [   x1_training_labeled.Var1 x1_training_labeled.Var2 x1_training_l
                 x2_training_labeled.Var1 x2_training_labeled.Var2 x2_training_labeled.Var3 x2_training_labeled.Var4;
                 x3_training_labeled.Var1 x3_training_labeled.Var2 x3_training_labeled.Var3 x3_training_labeled.Var4;];
 
+%% Reducing feature space, taking away feature: Sepal length
+% Features left: Sepal width, Petal length, Petal width
             
 features_needed = 2:4;
 training_data_3f = get_training_data(x_training, features_needed, N_training, C);
@@ -118,6 +117,8 @@ disp(training_error_rate)
 disp("-------------------")
 disp("-------------------")
 
+%% Reducing feature space, taking away feature: Sepal length, Sepal width
+% Features left: Petal length, Petal width
 
 features_needed = 3:4;
 training_data_2f = get_training_data(x_training, features_needed, N_training, C);
@@ -141,6 +142,9 @@ disp(training_error_rate)
 
 disp("-------------------")
 disp("-------------------")
+
+%% Reducing feature space, taking away features: Sepal length, Sepal width, Petal length
+% Features left: Petal width
 
 features_needed = 4;
 training_data_1f = get_training_data(x_training, features_needed, N_training, C);
