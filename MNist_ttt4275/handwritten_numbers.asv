@@ -57,8 +57,9 @@ close all
 
 load('data_all.mat');
 load('KNN1_misclassified_numbers.mat')
+load('KNN1_correctly_classified_numbers.mat')
 
-num_images_to_display = 20;
+num_
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
@@ -73,35 +74,12 @@ for i = 1:num_test
         title(str)
         images_displayed = images_displayed + 1;
     end
-    if images_displayed > num_images_to_display
+    if images_displayed > 20
         break
     end
 end
 
-%% Display some correctly classified images
-clc
-clear
-close all
 
-load('data_all.mat');
-load('KNN1_correctly_classified_numbers.mat')
 
-num_images_to_display = 20;
 
-images_displayed = 0;
-x = zeros(row_size, col_size);
-
-for i = 1:num_test
-    if ~(isnan(correctly_classified_numbers(i)))
-        x(:) = testv(i,:);
-        figure(i)
-        image(x')
-        str = "Correctly classified as "+int2str(correctly_classified_numbers(i));
-        title(str)
-        images_displayed = images_displayed + 1;
-    end
-    if images_displayed > num_images_to_display
-        break
-    end
-end
 
