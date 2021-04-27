@@ -4,7 +4,7 @@ clear;
 load('data_all.mat');
 C = 10;                 % Number of classes, 0-9
 
-chunk_size = 1000;
+chunk_size = 1;
 N = num_test/chunk_size;
 
 % The index of each element specifies the index of the test sample in testv
@@ -15,10 +15,11 @@ misclassified_numbers = NaN(1, num_test);
 
 confusion_matrix = zeros(C, C);
 
-%% Run NN classifier on testv with trainv as template
-
+%% Run NN classifier on testv with trainv as template (takes ~30min to run)
+tic
 for k = 1:N
-    disp(k);
+    %disp(k);
+    
     chunk_base_index = (k - 1)*chunk_size;
     template = trainv;
     test_chunk = testv(chunk_base_index + 1:k*chunk_size, :);
@@ -40,6 +41,7 @@ for k = 1:N
         confusion_matrix(label + 1, class + 1) = confusion_matrix(label + 1, class + 1) + 1;
     end
 end
+toc
 
 error_rate = 1-(trace(confusion_matrix)/num_test);
 
@@ -57,9 +59,8 @@ close all
 
 load('data_all.mat');
 load('KNN1_misclassified_numbers.mat')
-load('KNN1_correctly_classified_numbers.mat')
 
-num_
+num_images_to_display = 20;
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
@@ -74,12 +75,35 @@ for i = 1:num_test
         title(str)
         images_displayed = images_displayed + 1;
     end
-    if images_displayed > 20
+    if images_displayed > num_images_to_display
         break
     end
 end
 
+%% Display some correctly classified images
+clc
+clear
+close all
 
+load('data_all.mat');
+load('KNN1_correctly_classified_numbers.mat')
 
+num_images_to_display = 20;
 
+images_displayed = 0;
+x = zeros(row_size, col_size);
+
+for i = 1:num_test
+    if ~(isnan(correctly_classified_numbers(i)))
+        x(:) = testv(i,:);
+        figure(i)
+        image(x')
+        str = "Correctly classified as "+int2str(correctly_classified_numbers(i));
+        title(str)
+        images_displayed = images_displayed + 1;
+    end
+    if images_displayed > num_images_to_display
+        break
+    end
+end
 

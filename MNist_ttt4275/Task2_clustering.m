@@ -19,14 +19,13 @@ end
 training_data = sortrows(training_data, 2);
 sorted_training_data = cell2mat(training_data(:, 1));
 
-% Cumulativ sum of number indices
-x = zeros(1, C);
+% Count the number of examples for each class
+num_examples = zeros(1, C);
 for i = 1:num_train
-    x(trainlab(i) + 1) = x(trainlab(i) + 1) + 1;
+    num_examples(trainlab(i) + 1) = num_examples(trainlab(i) + 1) + 1;
 end
-
-class_indices = cumsum(x);
-class_indices = [0 class_indices];
+class_indices = cumsum(num_examples);
+class_indices = [0 class_indices];       % Add zero as the first index to indicate the start of the first class
 
 
 % Generate clusters
