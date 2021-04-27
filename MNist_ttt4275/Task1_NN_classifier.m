@@ -4,7 +4,7 @@ clear;
 load('data_all.mat');
 C = 10;                 % Number of classes, 0-9
 
-chunk_size = 1;
+chunk_size = 1000;
 N = num_test/chunk_size;
 
 % The index of each element specifies the index of the test sample in testv
@@ -18,7 +18,7 @@ confusion_matrix = zeros(C, C);
 %% Run NN classifier on testv with trainv as template (takes ~30min to run)
 tic
 for k = 1:N
-    %disp(k);
+    disp(k);
     
     chunk_base_index = (k - 1)*chunk_size;
     template = trainv;
