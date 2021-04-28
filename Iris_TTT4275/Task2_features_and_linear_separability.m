@@ -82,6 +82,8 @@ for i = 1:num_features
    ylim([0, 40]);
 end
 
+sgtitle("Histograms for each feature, whole data set");
+
 
 
 %% Take away the feature with most overlap between classes - *Vil si at det er Sepal length eller Sepal width, går for Sepal length i første omgang ;) *
@@ -107,14 +109,14 @@ x_training = [   x1_training_labeled.Var1 x1_training_labeled.Var2 x1_training_l
                 x2_training_labeled.Var1 x2_training_labeled.Var2 x2_training_labeled.Var3 x2_training_labeled.Var4;
                 x3_training_labeled.Var1 x3_training_labeled.Var2 x3_training_labeled.Var3 x3_training_labeled.Var4;];
 
-%% Reducing feature space, taking away feature: Sepal length
-% Features left: Sepal width, Petal length, Petal width
+%% Reducing feature space, taking away feature: Sepal width
+% Features left: Sepal length, Petal length, Petal width
             
-features_needed = 2:4;
+features_needed = [1,3:4];
 training_data_3f = get_training_data(x_training, features_needed, N_training, C);
 W_3 = train_classifier(training_data_3f, C, size(features_needed, 2));
 [conf_testing, conf_training] = get_confusion_matrices(x1all, x2all, x3all, features_needed, W_3, N_training, N_test, C);
-disp("Features: [Sepal width (cm), Petal length (cm), Petal width (cm)]")
+disp("Features: [Sepal length (cm), Petal length (cm), Petal width (cm)]")
 disp('Testing')
 disp(conf_testing)
 disp('Training')
@@ -159,14 +161,14 @@ disp(training_error_rate)
 disp("-------------------")
 disp("-------------------")
 
-%% Reducing feature space, taking away features: Sepal length, Sepal width, Petal length
-% Features left: Petal width
+%% Reducing feature space, taking away features: Sepal length, Sepal width, Petal width
+% Features left: Petal length
 
-features_needed = 4;
+features_needed = 3;
 training_data_1f = get_training_data(x_training, features_needed, N_training, C);
 W_1 = train_classifier(training_data_1f, C, size(features_needed, 2));
 [conf_testing, conf_training] = get_confusion_matrices(x1all, x2all, x3all, features_needed, W_1, N_training, N_test, C);
-disp("Features: [Petal width (cm)]")
+disp("Features: [Petal length (cm)]")
 disp('Testing')
 disp(conf_testing)
 disp('Training')
