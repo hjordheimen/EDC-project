@@ -61,11 +61,12 @@ load('data_all.mat');
 load('KNN1_misclassified_numbers.mat')
 
 num_images_to_display = 20;
+base_index = 1;
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
 
-for i = 1:num_test
+for i = base_index:num_test
     if ~(isnan(misclassified_numbers(i)))
         x(:) = testv(i,:);
         figure(i)
@@ -79,21 +80,52 @@ for i = 1:num_test
         break
     end
 end
+%% Figure comparing 4 and 9
+x = zeros(row_size, col_size);
+
+figure(1)
+subplot(2,2,1)
+x(:) = testv(116,:);
+image(x')
+str = "Classified as 9, label is 4";
+title(str)
+
+subplot(2,2,2)
+x(:) = testv(448,:);
+image(x')
+str = "Classified as 9, label is 4";
+title(str)
+
+subplot(2,2,3)
+x(:) = testv(13,:);
+image(x')
+str = "Correctly classified as 9";
+title(str)
+
+subplot(2,2,4)
+x(:) = testv(21,:);
+image(x')
+str = "Correctly classified as 9";
+title(str)
 
 %% Display some correctly classified images
 clc
 clear
 close all
 
+% Impressive classification: 9 (5), 60 (5), 55 (6), 44 (2), 5012 (8), 4016
+% (9), 4008 (7), 4002 (4)
+
 load('data_all.mat');
 load('KNN1_correctly_classified_numbers.mat')
 
 num_images_to_display = 20;
+base_index = 4000;
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
 
-for i = 1:num_test
+for i = base_index:num_test
     if ~(isnan(correctly_classified_numbers(i)))
         x(:) = testv(i,:);
         figure(i)
