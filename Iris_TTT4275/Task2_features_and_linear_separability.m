@@ -10,62 +10,78 @@ x3all = load('class_3','-ascii'); % Iris Virginica
 num_plots = 4;
 num_features = 4;
 
-%% Smoother way of plotting
+
+%% Producing histograms of the classes
 figure(1);
-    for j = 1:num_features
-       subplot(2,2,j);
-       histogram([x1all(:, j); x2all(:, j); x3all(:, j)], 'BinWidth', 0.1);
-       sgtitle("All iris'")
-       ylabel("Quantity");
-        if(mod(j,2))
-          xlabel("Length");
-          if(j < 3)
-              title("Sepal length");
-          else
-              title("Petal length");
-          end
-       else
-          xlabel("Width");
-          if(j < 3)
-              title("Sepal width");
-          else
-              title("Petal width");
-          end
-       end
-    end
-for i = 2:num_plots
-    figure(i)
-    for j = 1:num_features
-        subplot(2, 2, j);
-        if i == 2
-            histogram(x1all(:, j), 'BinWidth', 0.1);
-            sgtitle('Iris Setosa')
-        elseif i == 3
-            histogram(x2all(:, j), 'BinWidth', 0.1);
-            sgtitle('Iris Versicolor')
-        else
-            histogram(x3all(:, j), 'BinWidth', 0.1);
-            sgtitle('Iris Virginica')
-        end
-        
-        ylabel("Quantity");
-       if(mod(j,2))
-          xlabel("Length");
-          if(j < 3)
-              title("Sepal length");
-          else
-              title("Petal length");
-          end
-       else
-          xlabel("Width");
-          if(j < 3)
-              title("Sepal width");
-          else
-              title("Petal width");
-          end
-       end
-    end
+subplot(4,1,1);
+for i = 1:num_features
+    histogram([x1all(:, i); x2all(:, i); x3all(:, i)], 'BinWidth', 0.2);
+    hold on;
 end
+title("All iris'");
+xlabel("Size [m^{-2}]");
+ylabel("Quantity");
+legend("Sepal length", "Sepal width", "Petal length", "Petal width");
+xlim([0, 8]);
+ylim([0, 40]);
+
+subplot(4,1,2);
+for i = 1:num_features
+    histogram(x1all(:, i), 'BinWidth', 0.2);
+    hold on;
+end
+title('Iris Setosa')
+xlabel("Size [m^{-2}]");
+ylabel("Quantity");
+legend("Sepal length", "Sepal width", "Petal length", "Petal width");
+xlim([0, 8]);
+ylim([0, 40]);
+
+subplot(4,1,3);
+for i = 1:num_features
+    histogram(x2all(:, i), 'BinWidth', 0.2);
+    hold on;
+end
+title('Iris Versicolor')
+xlabel("Size [m^{-2}]");
+ylabel("Quantity");
+legend("Sepal length", "Sepal width", "Petal length", "Petal width");
+xlim([0, 8]);
+ylim([0, 40]);
+
+subplot(4,1,4);
+for i = 1:num_features
+    histogram(x3all(:, i), 'BinWidth', 0.2);
+    hold on;
+end
+title('Iris Virginica');
+xlabel("Size [m^{-2}]");
+ylabel("Quantity");
+legend("Sepal length", "Sepal width", "Petal length", "Petal width");
+xlim([0, 8]);
+ylim([0, 40]);
+
+sgtitle("Histograms of the classes");
+
+%% Producing histograms for each feature
+feature_names = ["Sepal length", "Sepal width", "Petal length", "Petal width"];
+figure(2);
+for i = 1:num_features
+   subplot(4,1,i);
+   histogram(x1all(:, i), 'BinWidth', 0.2);
+   hold on;
+   histogram(x2all(:, i), 'BinWidth', 0.2);
+   hold on;
+   histogram(x3all(:, i), 'BinWidth', 0.2);
+   hold on;
+   title(feature_names(i));
+   xlabel("Size [m^{-2}]");
+   ylabel("Quantity");
+   legend("Iris Setosa", "Iris Versicolor", "Iris Virginica");
+   xlim([0, 8]);
+   ylim([0, 40]);
+end
+
 
 
 %% Take away the feature with most overlap between classes - *Vil si at det er Sepal length eller Sepal width, går for Sepal length i første omgang ;) *
