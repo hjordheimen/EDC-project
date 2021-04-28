@@ -40,68 +40,16 @@ for i = 1:N_training
    training_data(i + 2*N_training, :) = {x3_i, t3};
 end
 
-% Set up training, again...
-x1_training = x1all(1:N_training, :);
-x2_training = x2all(1:N_training, :);
-x3_training = x3all(1:N_training, :);
-
-% Set up tests
-x1_test = x1all(N_training + 1:end, :);
-x2_test = x2all(N_training + 1:end, :);
-x3_test = x3all(N_training + 1:end, :);
-
-
 
 %% Linear classifier - Training
 
-% g = W_t*x_t, W_t = [W j] --> g = [W w_0]*[x' 1]'
-
-W_0 = zeros(3,4);
-w_0 = [0 0 0]';
-
-% Homogenous form
-W_0 = [W_0 w_0]; % Initialized 
-
-f = @(W) MSE(training_data, W);
-grad_f = @(W) grad_MSE(training_data, W);
-
-W_iterates = SteepestDescent(f, grad_f, W_0);
-W = W_iterates(:, end - D: end);
+W = train_classifier(training_data, C, D);
 
 
 %% Testing
 
-confusion_matrix_testing = zeros(C, C);
-confusion_matrix_training = zeros(C, C);
+[confusion_matrix_testing, confusion_matrix_training] = get_confusion_matrices(x1all, x2all, x3all, 1:D, W, N_training, N_test, C);
 
-
-for i = 1:N_test
-    x1 = x1_test(i, :)';
-    x2 = x2_test(i, :)';
-    x3 = x3_test(i, :)';
-    
-    x1_class = classifier(x1, W);
-    x2_class = classifier(x2, W);
-    x3_class = classifier(x3, W);
-    
-    confusion_matrix_testing(1, x1_class) = confusion_matrix_testing(1, x1_class) + 1;
-    confusion_matrix_testing(2, x2_class) = confusion_matrix_testing(2, x2_class) + 1;
-    confusion_matrix_testing(3, x3_class) = confusion_matrix_testing(3, x3_class) + 1;
-end
-
-for i = 1:N_training
-    x1 = x1_training(i, :)';
-    x2 = x2_training(i, :)';
-    x3 = x3_training(i, :)';
-    
-    x1_class = classifier(x1, W);
-    x2_class = classifier(x2, W);
-    x3_class = classifier(x3, W);
-    
-    confusion_matrix_training(1, x1_class) = confusion_matrix_training(1, x1_class) + 1;
-    confusion_matrix_training(2, x2_class) = confusion_matrix_training(2, x2_class) + 1;
-    confusion_matrix_training(3, x3_class) = confusion_matrix_training(3, x3_class) + 1;
-end
 disp('Testing')
 disp(confusion_matrix_testing)
 disp('Training')
@@ -117,12 +65,11 @@ disp(testing_error_rate)
 disp('Error rate - training')
 disp(training_error_rate)
 
-disp('------------------')
-disp('--Reversed Order--')
-disp('------------------')
+disp('-------------------------')
+disp('--Reversed sample Order--')
+disp('-------------------------')
 
 %% Last 30 samples for training, 20 first as tests
-
 clear
 
 %% Set up
@@ -177,20 +124,7 @@ x3_test = x3all(1:N_test, :);
 
 
 %% Linear classifier - Training
-
-% g = W_t*x_t, W_t = [W j] --> g = [W w_0]*[x' 1]'
-
-W_0 = zeros(3,4);
-w_0 = [0 0 0]';
-
-% Homogenous form
-W_0 = [W_0 w_0]; % Initialized 
-
-f = @(W) MSE(training_data, W);
-grad_f = @(W) grad_MSE(training_data, W);
-
-W_iterates = SteepestDescent(f, grad_f, W_0);
-W = W_iterates(:, end - D: end);
+W = train_classifier(training_data, C, D);
 
 
 %% Testing
@@ -242,15 +176,3 @@ disp(testing_error_rate)
 
 disp('Error rate - training')
 disp(training_error_rate)
-
-
-
-% function t_i = generateTargetVectorb(labelStr)
-%     if labelStr == 'Iris-setosa'
-%         t_i = [1 0 0]';
-%     elseif labelStr == 'Iris-versicolor'
-%         t_i = [0 1 0]';
-%     else
-%         t_i = [0 0 1]';
-%     end
-% end
