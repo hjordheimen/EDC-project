@@ -130,7 +130,25 @@ disp(error_rate_1);
 % Mehtod 2 - if multiple classes are most frequent, choose most 
 % frequent class with lowest total distance to sample
 
-confusion_matrix_KNN_2 = zeros(C, C);
+load('data_all.mat');
+
+tic
+C = 10;
+K = 7;
+I = NaN(K, num_test);
+
+chunk_base_index = (k - 1)*chunk_size;
+    template = trainv;
+    test_chunk = testv(chunk_base_index + 1:k*chunk_size, :);
+    
+    Z = dist(template, test_chunk');        % Each column of Z holds the distance to each template sample for one test sample
+    [~, I] = min(Z);
+Z = dist(new_trainv, testv');
+[~, I] = mink(Z, K);
+
+%--
+confusion_matrix_KNN_2_unclustered = zeros(C, C);
+
 for sample_index = 1:num_test
  
     NN_class_and_dist_count = zeros(2,C);
@@ -164,13 +182,14 @@ for sample_index = 1:num_test
 
     label = testlab(sample_index);
         
-    confusion_matrix_KNN_2(label + 1, predicted_class + 1) = confusion_matrix_KNN_2(label + 1, predicted_class + 1) + 1;
+    confusion_matrix_KNN_2_unclustered(label + 1, predicted_class + 1) = confusion_matrix_KNN_2_unclustered(label + 1, predicted_class + 1) + 1;
 end
 
-error_rate_2 = 1 - (trace(confusion_matrix_KNN_2)/num_test);
+error_rate_2 = 1 - (trace(confusion_matrix_KNN_2_unclustered)/num_test);
+toc
 
 disp("Confusion matrix 2:");
-disp(confusion_matrix_KNN_2);
+disp(confusion_matrix_KNN_2_unclustered);
 disp("Error rate 2:");
 disp(error_rate_2);
 

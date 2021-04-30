@@ -60,8 +60,8 @@ close all
 load('data_all.mat');
 load('KNN1_misclassified_numbers.mat')
 
-num_images_to_display = 20;
-base_index = 1;
+num_images_to_display = 30;
+base_index = 100;
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
@@ -80,47 +80,17 @@ for i = base_index:num_test
         break
     end
 end
-%% Figure comparing 4 and 9
-x = zeros(row_size, col_size);
-
-figure(1)
-subplot(2,2,1)
-x(:) = testv(116,:);
-image(x')
-str = "Classified as 9, label is 4";
-title(str)
-
-subplot(2,2,2)
-x(:) = testv(448,:);
-image(x')
-str = "Classified as 9, label is 4";
-title(str)
-
-subplot(2,2,3)
-x(:) = testv(13,:);
-image(x')
-str = "Correctly classified as 9";
-title(str)
-
-subplot(2,2,4)
-x(:) = testv(21,:);
-image(x')
-str = "Correctly classified as 9";
-title(str)
 
 %% Display some correctly classified images
 clc
 clear
 close all
 
-% Impressive classification: 9 (5), 60 (5), 55 (6), 44 (2), 5012 (8), 4016
-% (9), 4008 (7), 4002 (4)
-
 load('data_all.mat');
 load('KNN1_correctly_classified_numbers.mat')
 
-num_images_to_display = 20;
-base_index = 4000;
+num_images_to_display = 30;
+base_index = 8000;
 
 images_displayed = 0;
 x = zeros(row_size, col_size);
@@ -138,4 +108,71 @@ for i = base_index:num_test
         break
     end
 end
+
+%% Figure comparing 4 and 9
+clc
+clear
+close all
+
+load('data_all.mat');
+
+indices = [116 448 13 21];
+strs = ["Classified as 9, label is 4";
+        "Classified as 9, label is 4";
+        "Correctly classified as 9"  ;
+        "Correctly classified as 9"  ;];
+x = zeros(row_size, col_size);
+
+figure(1)
+for i = 1:length(indices)
+    subplot(2,2,i)
+    x(:) = testv(indices(i),:);
+    image(x')
+    str = strs(i);
+    title(str)
+end
+
+%% Figure of impressive classifcations
+clc
+clear
+close all
+
+load('data_all.mat');
+
+indices = [44 4008 8000 8001];
+
+x = zeros(row_size, col_size);
+
+figure(2)
+for i = 1:length(indices)
+    subplot(2,2,i)
+    x(:) = testv(indices(i),:);
+    image(x')
+    str = "Correctly classified as "+int2str(testlab(indices(i)));
+    title(str)
+end
+
+%% Figure of misclassifcations
+clc
+clear
+close all
+
+load('data_all.mat');
+load('KNN1_misclassified_numbers.mat')
+
+% Three first are understable misses, three last are wierd to miss on
+indices = [359 446 741 480 269 342];
+
+x = zeros(row_size, col_size);
+
+figure(2)
+for i = 1:length(indices)
+    subplot(2,3,i)
+    x(:) = testv(indices(i),:);
+    image(x')
+    str = "Classified as "+int2str(misclassified_numbers(indices(i)));
+    str = str + ", label is " + int2str(testlab(indices(i)));
+    title(str)
+end
+
 
