@@ -1,4 +1,6 @@
-% Algorithm 3.1 from OptReg book
+% Backtracking line search algorithm for finding optimal step length in 
+% gradient descent optimization algorithms.
+% Uses the Armijo rule for sufficient decrease
 function alpha = BLS(f, f_val, df_val, x_k, p_k)
     % 0 < c < rho < 1
     alpha = 1;

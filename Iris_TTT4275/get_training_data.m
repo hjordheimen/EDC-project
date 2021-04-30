@@ -1,12 +1,11 @@
 function training_data = get_training_data(x_training, features_needed, N_training, C)
-%GET_TRAINING_DATA Summary of this function goes here
-%   Detailed explanation goes here
 
     % Targets
     t1 = [1 0 0]';
     t2 = [0 1 0]';
     t3 = [0 0 1]';
 
+    % Storing each training sample and its target vector in a cell array
     training_data = cell(N_training*C, 2);
     for i = 1:N_training
        x1_i = x_training(i, (features_needed))'; 

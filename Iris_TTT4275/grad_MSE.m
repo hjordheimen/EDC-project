@@ -1,6 +1,8 @@
 function grad_mse = grad_MSE(training_data, W)
-% Returns gradient of the MSE. Derived from equations in the compendium.
-    
+% Evaluates the gradient of the MSE function w.r.t W 
+% for the linear discriminant classifier given 
+% the labeled training data and the weights W.
+
     N = size(training_data, 1);
 
     grad_mse  = 0;
