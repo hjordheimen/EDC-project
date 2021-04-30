@@ -7,9 +7,7 @@ C = 10;                 % Number of classes, 0-9
 chunk_size = 1000;
 N = num_test/chunk_size;
 
-% The index of each element specifies the index of the test sample in testv
-% The element at that index specifies the number which that sample is
-% classified as
+% Store results in order to display them later
 correctly_classified_numbers = NaN(1, num_test);
 misclassified_numbers = NaN(1, num_test);
 
@@ -21,11 +19,14 @@ for k = 1:N
     disp(k);
     
     chunk_base_index = (k - 1)*chunk_size;
-    template = trainv;
+    % Use entire training set as templates
+    templates = trainv;                      
     test_chunk = testv(chunk_base_index + 1:k*chunk_size, :);
     
-    Z = dist(template, test_chunk');        % Each column of Z holds the distance to each template sample for one test sample
-    [~, I] = min(Z);                        % Exctract index of the NN for each sample
+    % Each column of Z holds the distance to all templates for one test sample
+    % min extracts the index of the NN for each sample
+    Z = dist(templates, test_chunk');        
+    [~, I] = min(Z);                         
     
     for sample_chunk_index = 1:chunk_size
         sample_index = chunk_base_index + sample_chunk_index;
@@ -45,134 +46,7 @@ toc
 
 error_rate = 1-(trace(confusion_matrix)/num_test);
 
-
-%% Disp
 disp("Confusion matrix:")
 disp(confusion_matrix)
 disp("Error rate:")
 disp(error_rate)
-
-%% Display some misclassified images
-clc
-clear
-close all
-
-load('data_all.mat');
-load('KNN1_misclassified_numbers.mat')
-
-num_images_to_display = 30;
-base_index = 100;
-
-images_displayed = 0;
-x = zeros(row_size, col_size);
-
-for i = base_index:num_test
-    if ~(isnan(misclassified_numbers(i)))
-        x(:) = testv(i,:);
-        figure(i)
-        image(x')
-        str = "Classified as "+int2str(misclassified_numbers(i));
-        str = str + ", label is " + int2str(testlab(i));
-        title(str)
-        images_displayed = images_displayed + 1;
-    end
-    if images_displayed > num_images_to_display
-        break
-    end
-end
-
-%% Display some correctly classified images
-clc
-clear
-close all
-
-load('data_all.mat');
-load('KNN1_correctly_classified_numbers.mat')
-
-num_images_to_display = 30;
-base_index = 8000;
-
-images_displayed = 0;
-x = zeros(row_size, col_size);
-
-for i = base_index:num_test
-    if ~(isnan(correctly_classified_numbers(i)))
-        x(:) = testv(i,:);
-        figure(i)
-        image(x')
-        str = "Correctly classified as "+int2str(correctly_classified_numbers(i));
-        title(str)
-        images_displayed = images_displayed + 1;
-    end
-    if images_displayed > num_images_to_display
-        break
-    end
-end
-
-%% Figure comparing 4 and 9
-clc
-clear
-close all
-
-load('data_all.mat');
-
-indices = [116 448 13 21];
-strs = ["Classified as 9, label is 4";
-        "Classified as 9, label is 4";
-        "Correctly classified as 9"  ;
-        "Correctly classified as 9"  ;];
-x = zeros(row_size, col_size);
-
-figure(1)
-for i = 1:length(indices)
-    subplot(2,2,i)
-    x(:) = testv(indices(i),:);
-    image(x')
-    str = strs(i);
-    title(str)
-end
-
-%% Figure of impressive classifcations
-clc
-clear
-close all
-
-load('data_all.mat');
-
-indices = [44 4008 8000 8001];
-
-x = zeros(row_size, col_size);
-
-figure(2)
-for i = 1:length(indices)
-    subplot(2,2,i)
-    x(:) = testv(indices(i),:);
-    image(x')
-    str = "Correctly classified as "+int2str(testlab(indices(i)));
-    title(str)
-end
-
-%% Figure of misclassifcations
-clc
-clear
-close all
-
-load('data_all.mat');
-load('KNN1_misclassified_numbers.mat')
-
-% Three first are understable misses, three last are wierd to miss on
-indices = [359 446 741 480 269 342];
-
-x = zeros(row_size, col_size);
-
-figure(2)
-for i = 1:length(indices)
-    subplot(2,3,i)
-    x(:) = testv(indices(i),:);
-    image(x')
-    str = "Classified as "+int2str(misclassified_numbers(indices(i)));
-    str = str + ", label is " + int2str(testlab(indices(i)));
-    title(str)
-end
-
-

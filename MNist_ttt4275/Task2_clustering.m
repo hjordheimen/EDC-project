@@ -4,10 +4,10 @@ clear
 %% Initializing and set up
 load('data_all.mat');
 
-C = 10;
-M = 64; % # Clusters
+C = 10; % # of classes
+M = 64; % # of clusters
 
-% Set up training data
+% Match training samples and labels in a cell array
 training_data = cell(num_train, 2);
 for sample_index = 1:num_train
    number_i = trainv(sample_index, :);
@@ -15,19 +15,23 @@ for sample_index = 1:num_train
    training_data(sample_index, :) = {number_i, label_i};
 end
 
+% Sort the training data by label
 training_data = sortrows(training_data, 2);
 sorted_training_data = cell2mat(training_data(:, 1));
 
-% Count the number of examples for each class
+% Count the number of samples from each class
 num_examples = zeros(1, C);
 for sample_index = 1:num_train
     num_examples(trainlab(sample_index) + 1) = num_examples(trainlab(sample_index) + 1) + 1;
 end
+
+% Generate start index of each class
+% Zero indicates the start of the first class
 class_indices = cumsum(num_examples);
-class_indices = [0 class_indices];       % Add zero as the first index to indicate the start of the first class
+class_indices = [0 class_indices];
 
 
-% Generate clusters
+% Generate clusters and insert them into the new training set
 new_trainv = NaN(M*C, vec_size);
 
 for sample_index = 1:C
@@ -36,7 +40,7 @@ for sample_index = 1:C
 end
 
 
-% Creating new_trainlab, sorted
+% Creating new labels for training set
 new_trainlab = [ zeros(M, 1); 
                   ones(M, 1); 
                 2*ones(M, 1); 
@@ -48,28 +52,13 @@ new_trainlab = [ zeros(M, 1);
                 8*ones(M, 1); 
                 9*ones(M, 1); ];
 
-%% Checking the images of new_trainv
-%close all
-
-% 4: 318, 314, 312, 303, 300, 280, 259
-% 7: 477, 472, 452, 451(rar!), 505, 503(9), 499, 488
-% 9: 607, 604, 596, 592, 588(smeared), 584, 578, 639 (7), 633 (7), 628(4),
-% 625 (smeared), 618
-pictures_of_each_class = 32;
-x = zeros(28,28); 
-
-for j = 4
-    for i = 1:pictures_of_each_class
-        x(:)= new_trainv(j*M+i, :);    
-        figure(j*M+i);
-        image(x');
-    end
-end
-
-%% Finding the confusion matrix and error rate, using NN classifier using the clusters as templates. 
+%% Run NN classifier using the clusters as templates
 tic
 confusion_matrix_NN = zeros(C, C);
 
+% Use the clustered samples as templates
+% Each column of Z holds the distance to all templates for one test sample
+% min extracts the index of the NN for each sample
 Z = dist(new_trainv, testv');
 [~, I] = min(Z);
 
@@ -85,7 +74,6 @@ end
 error_rate_NN = 1 - (trace(confusion_matrix_NN)/num_test);
 
 toc
-disp("NN clustered^")
 
 disp("Confusion matrix, clustering:");
 disp(confusion_matrix_NN);
@@ -95,23 +83,29 @@ disp(error_rate_NN);
 
 %% KNN - calculate distances and extract NN indices
 
-tic
 K = 7;
+
+% Each column of Z holds the distance to all templates for one test sample
+% mink extracts the indices of the KNNs for each sample
 Z = dist(new_trainv, testv');
 [~, I] = mink(Z, K);
 
 
-%%
-% Method 1 - if multiple classes are most frequent, choose most 
+%% KNN Method 1
+% If multiple classes are most frequent, choose most 
 % frequent lowest class
 
 confusion_matrix_KNN_1 = zeros(C, C);
+
+% For each sample
 for sample_index = 1:num_test
   
     NN_classes = NaN(1, K);
     for nn = 1:K
        NN_classes(nn) = new_trainlab(I(nn, sample_index)); 
     end
+    
+    % choose most frequent lowest class
     predicted_class = mode(NN_classes); 
     label = testlab(sample_index);
         
@@ -126,11 +120,13 @@ disp("Error rate 1:");
 disp(error_rate_1);
 
 
-%%
-% Mehtod 2 - if multiple classes are most frequent, choose most 
+%% KNN Method 2
+% If multiple classes are most frequent, choose most 
 % frequent class with lowest total distance to sample
 
 confusion_matrix_KNN_2 = zeros(C, C);
+
+% For each sample
 for sample_index = 1:num_test
  
     NN_class_and_dist_count = zeros(2,C);
@@ -174,20 +170,21 @@ disp(confusion_matrix_KNN_2);
 disp("Error rate 2:");
 disp(error_rate_2);
 
-%%  
-% Mehtod 3 - if multiple classes are most frequent, choose most 
+%% KNN Method 3
+% If multiple classes are most frequent, choose most 
 % frequent class with lowest single distance to sample
 
 confusion_matrix_KNN_3 = zeros(C, C);
 
+% For each sample
 for sample_index = 1:num_test
 
     NN_class_count = zeros(1,C);
     NN_min_dist = inf*ones(1,C);
     NN_class_count_and_min_dist = [NN_class_count; NN_min_dist];
     
-    % Count the number of NNs from each class and the total distance
-    % from the sample to each class among the NNs.
+    % Count the number of NNs from each class. Store the lowest single
+    % distance from the sample to each class among the NNs.
     for nn = 1:K
        NN_class = new_trainlab(I(nn, sample_index));
        NN_dist = Z(I(nn,sample_index));
@@ -226,27 +223,4 @@ disp("Confusion matrix 3:");
 disp(confusion_matrix_KNN_3);
 disp("Error rate 3:");
 disp(error_rate_3);
-
-%% Plot of chosen clusters
-close all
-
-indices = [277 314 274 451 503 488 588 633 628];
-x = zeros(28,28); 
-
-figure(3);
-for i = 1:length(indices)
-    x(:)= new_trainv(indices(i), :);
-    subplot(3,3,i)
-    image(x');
-    if i <= 3
-        str = "Cluster of 4s";
-    elseif (i > 3) && (i <=6)
-        str = "Cluster of 7s";
-    else
-        str = "Cluster of 9s";
-    end
-    title(str)
-end
-
-
 
